@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SFD - Student Financial Dashboard</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <!-- External Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Modular Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav id="navbar">
+    <div class="logo" onclick="showPage('landing')">SFD</div>
+    <div class="nav-links">
+      <button class="nav-btn" onclick="showPage('home')">Home</button>
+      <button class="nav-btn" onclick="showPage('finance')">Finance</button>
+      <button class="nav-btn" onclick="showPage('habits')">Habits</button>
+      <button class="nav-btn" onclick="showPage('goals')">Goals</button>
+      <button class="nav-btn" onclick="showPage('analytics')">Analytics</button>
+    </div>
+    <div class="nav-right">
+      <div id="live-clock">--:--:--</div>
+      <div id="user-badge" onclick="logoutUser()" title="Click to logout">
+        <span id="user-name-nav" style="font-family:'Syne',sans-serif;font-weight:700;color:var(--neon)">👤</span>
+        <div class="logout-tip">Logout</div>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <span class="theme-icon" id="theme-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===================== TOAST CONTAINER ===================== -->
+  <div class="tw" id="tw"></div>
+
+  <!-- ===================== MILESTONE MODAL ===================== -->
+  <div id="milestone-modal" class="modal-bg">
+    <div class="modal-inner">
+      <div id="me" style="font-size:5rem;margin-bottom:1rem"></div>
+      <div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:.5rem" id="mt"></div>
+      <div style="color:var(--text2);margin-bottom:2rem" id="ms"></div>
+      <button class="cta" onclick="document.getElementById('milestone-modal').style.display='none'">
+        <span>Awesome! 🎉</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================== LANDING PAGE ===================== -->
+  <div id="page-landing" class="page active" style="height:100vh;padding-top:0">
+    <canvas id="pc"></canvas>
+    <div class="lc">
+      <div class="badge">✦ Your Student Finance Companion</div>
+      <h1 class="lh1">Take Control of Your<br><span>Student Life & Finances</span></h1>
+      <p class="lsub">no cap — track expenses, build habits, and crush goals.<br>your glow-up starts with knowing where your money goes 💸</p>
+      
+      <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.75rem">
+        <div style="background:rgba(255,255,255,0.07);border:1px solid var(--border2);border-radius:12px;padding:10px 18px;font-size:.85rem">
+          <span style="color:var(--text2)">Today</span>&nbsp;
+          <span id="landing-date" style="font-family:'Syne',sans-serif;font-weight:700;color:var(--neon)">--</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.07);border:1px solid var(--border2);border-radius:12px;padding:10px 18px;font-size:.85rem">
+          <span style="color:var(--text2)">Time</span>&nbsp;
+          <span id="landing-time" style="font-family:'Syne',sans-serif;font-weight:700;color:var(--neon3)">--:--:--</span>
+        </div>
+      </div>
+
+      <button class="cta" onclick="showPage('home')"><span>Get Started →</span></button>
+      
+      <div id="scroll-arrow" onclick="scrollToFeatures()" style="margin-top:2.5rem;cursor:pointer;animation:bounce 2s ease infinite;display:flex;flex-direction:column;align-items:center;gap:.3rem;opacity:.7">
+        <span style="font-size:.72rem;color:var(--text2);letter-spacing:1px;text-transform:uppercase">Scroll to explore</span>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--neon)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== HOME PAGE ===================== -->
+  <div id="page-home" class="page">
+    <div class="sec">
+      <div style="text-align:center;max-width:600px;margin:0 auto 2.5rem">
+        <div class="badge" style="margin-bottom:1rem">✦ All-in-One Student Hub</div>
+        <h2 class="sec-t" style="font-size:2rem;margin-bottom:.75rem">Everything you need.<br>Nothing you don't.</h2>
+        <p style="color:var(--text2);font-weight:300;line-height:1.8">SFD helps students manage money smarter, track daily habits consistently, and crush goals with streak-powered motivation.</p>
+        <div style="margin-top:.75rem;font-size:.88rem">
+          <span style="color:var(--text2)">Today: </span>
+          <span id="home-date" style="color:var(--neon);font-family:'Syne',sans-serif;font-weight:700">--</span>
+        </div>
+      </div>
+
+      <div class="fg">
+        <div class="fc" onclick="showPage('finance')">
+          <div class="fi" style="background:rgba(79,158,255,0.15)">💸</div>
+          <h3>Expense Tracking</h3>
+          <p>Log income and expenses by category. See live charts. Know exactly where your money goes.</p>
+          <div style="margin-top:.75rem;font-size:.8rem;color:var(--neon)">Open Finance Dashboard →</div>
+        </div>
+        <div class="fc" onclick="showPage('habits')">
+          <div class="fi" style="background:rgba(124,92,252,0.15)">🔁</div>
+          <h3>Habit Building</h3>
+          <p>Create custom habits, check them off daily, and watch your consistency grow with calendar tracking.</p>
+          <div style="margin-top:.75rem;font-size:.8rem;color:var(--neon2)">Open Habit Tracker →</div>
+        </div>
+        <div class="fc" onclick="showPage('goals')">
+          <div class="fi" style="background:rgba(0,229,200,0.15)">🎯</div>
+          <h3>Goal Management</h3>
+          <p>Set financial, personal or purchase goals. Track streaks, deadlines, and celebrate milestones.</p>
+          <div style="margin-top:.75rem;font-size:.8rem;color:var(--neon3)">Open Goal Streaks →</div>
+        </div>
+        <div class="fc" onclick="showPage('analytics')">
+          <div class="fi" style="background:rgba(236,72,153,0.15)">📊</div>
+          <h3>Real-Time Analytics</h3>
+          <p>See all your finances, habit consistency and goal progress in one unified analytics dashboard.</p>
+          <div style="margin-top:.75rem;font-size:.8rem;color:var(--pink)">Open Analytics →</div>
+        </div>
+      </div>
+
+      <!-- Quotes Section -->
+      <div class="qw">
+        <div class="qt" id="qt"></div>
+        <div class="qa" id="qa"></div>
+        <div class="qdots" id="qdots"></div>
+      </div>
+
+      <div style="text-align:center;margin-bottom:1rem;font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem">How It Works</div>
+      <div class="flow">
+        <div class="fn"><div class="fl">You provide</div><div class="ft" style="color:var(--neon)">Income + Habits</div></div>
+        <div class="fa">→</div>
+        <div class="fn"><div class="fl">SFD does</div><div class="ft" style="color:var(--neon2)">Processing</div></div>
+        <div class="fa">→</div>
+        <div class="fn"><div class="fl">You get</div><div class="ft" style="color:var(--neon3)">Insights</div></div>
+        <div class="fa">→</div>
+        <div class="fn"><div class="fl">Result</div><div class="ft" style="color:var(--green)">📈 Growth</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== FINANCE PAGE ===================== -->
+  <div id="page-finance" class="page">
+    <div class="sec">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.3rem">
+        <h2 class="sec-t">Financial Dashboard</h2>
+        <span id="fin-date" class="dpill" style="color:var(--neon);background:rgba(79,158,255,0.08);border:1px solid rgba(79,158,255,0.2)">--</span>
+      </div>
+      <p class="sec-s">Track your income and expenses in real time</p>
+
+      <div class="ftop">
+        <!-- Add Transaction Form -->
+        <div class="gc">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1rem;font-size:1rem">Add Transaction</div>
+          <div style="margin-bottom:.7rem">
+            <div class="tt">
+              <button class="tb ai" id="btn-inc" onclick="setType('income')">+ Income</button>
+              <button class="tb" id="btn-exp" onclick="setType('expense')">− Expense</button>
+            </div>
+          </div>
+          <div class="fr">
+            <div class="fg2"><label>Description</label><input class="fc2" id="td" placeholder="e.g. Lunch, Salary..."></div>
+            <div class="fg2"><label>Amount (₹)</label><input class="fc2" id="ta" type="number" placeholder="0.00" min="0"></div>
+          </div>
+          <div class="fr">
+            <div class="fg2">
+              <label>Category</label>
+              <select class="fc2" id="tcat">
+                <option value="Food">🍔 Food</option>
+                <option value="Travel">🚌 Travel</option>
+                <option value="Study">📚 Study</option>
+                <option value="Entertainment">🎮 Entertainment</option>
+                <option value="Health">💊 Health</option>
+                <option value="Shopping">🛍 Shopping</option>
+                <option value="Income">💼 Income/Other</option>
+              </select>
+            </div>
+            <div class="fg2"><label>Date</label><input class="fc2" id="tdt" type="date"></div>
+          </div>
+          <button class="sbtn" onclick="addTxn()">Add Transaction</button>
+        </div>
+
+        <!-- Balance Card & Recent Transactions -->
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="bdisp">
+            <div class="blbl">Current Balance</div>
+            <div class="bamt bpos" id="bal">₹0</div>
+            <div class="bstats">
+              <div class="bs"><div class="bv bgi" id="tinc">₹0</div><div class="bl">Total Income</div></div>
+              <div style="width:1px;background:var(--border)"></div>
+              <div class="bs"><div class="bv bex" id="texp">₹0</div><div class="bl">Total Expenses</div></div>
+            </div>
+          </div>
+          <div class="gc" style="flex:1;overflow:hidden">
+            <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:.7rem;font-size:.88rem;display:flex;justify-content:space-between">
+              Recent Transactions
+              <span id="txnc" style="font-size:.73rem;color:var(--text2);font-family:'DM Sans',sans-serif;font-weight:400">0 items</span>
+            </div>
+            <div class="tlist" id="tlist"><div class="es">💳 No transactions yet</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="cg">
+        <div class="cc">
+          <div class="ct">Income vs Expenses (14 days)</div>
+          <div style="position:relative;height:200px">
+            <canvas id="lc2" role="img" aria-label="Income vs expense line chart"></canvas>
+          </div>
+        </div>
+        <div class="cc">
+          <div class="ct">Spending by Category</div>
+          <div id="pie-leg" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.6rem;font-size:11px"></div>
+          <div style="position:relative;height:175px">
+            <canvas id="pc2" role="img" aria-label="Category pie chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== HABITS PAGE ===================== -->
+  <div id="page-habits" class="page">
+    <div class="sec">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.3rem">
+        <h2 class="sec-t">Habit Tracker</h2>
+        <span id="hab-date" class="dpill" style="color:var(--neon2);background:rgba(124,92,252,0.08);border:1px solid rgba(124,92,252,0.2)">--</span>
+      </div>
+      <p class="sec-s">Build consistency — one day at a time</p>
+
+      <div class="inner2col" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+        <div class="gc">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1rem;font-size:1rem">Add New Habit</div>
+          <div class="fg2" style="margin-bottom:.7rem">
+            <label>Habit Name</label>
+            <input class="fc2" id="hi" placeholder="e.g. Read 30 mins, Drink water...">
+          </div>
+          <div style="display:flex;gap:.7rem;margin-bottom:.7rem">
+            <div class="fg2" style="flex:1">
+              <label>Emoji</label>
+              <input class="fc2" id="hem" placeholder="📖" maxlength="2" style="text-align:center;font-size:1.1rem">
+            </div>
+            <div class="fg2" style="flex:1">
+              <label>Color</label>
+              <select class="fc2" id="hcol">
+                <option value="neon">🔵 Blue</option>
+                <option value="neon2">🟣 Purple</option>
+                <option value="neon3">🟢 Teal</option>
+                <option value="green">🟩 Green</option>
+                <option value="amber">🟡 Amber</option>
+                <option value="pink">🩷 Pink</option>
+              </select>
+            </div>
+          </div>
+          <button class="sbtn" onclick="addHabit()">+ Add Habit</button>
+          
+          <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.83rem;margin-bottom:.6rem;color:var(--text2)">Today's Progress</div>
+            <div id="tp"><div class="es" style="padding:.5rem;font-size:.85rem">No habits yet</div></div>
+          </div>
+        </div>
+
+        <div class="gc">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:.85rem;font-size:1rem">Habit Calendar — Last 14 Days</div>
+          <div class="hgrid" id="hgrid"><div class="es">🌱 Add habits to start tracking</div></div>
+        </div>
+      </div>
+
+      <div class="cg">
+        <div class="cc">
+          <div class="ct">Consistency per Habit (14 days)</div>
+          <div style="position:relative;height:200px">
+            <canvas id="hlc" role="img" aria-label="Per-habit consistency line chart"></canvas>
+          </div>
+        </div>
+        <div class="cc">
+          <div class="ct">Completion Rates</div>
+          <div id="hrates" style="display:flex;flex-direction:column;gap:.7rem;max-height:210px;overflow-y:auto">
+            <div class="es">No habits yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== GOALS PAGE ===================== -->
+  <div id="page-goals" class="page">
+    <div class="sec">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.3rem">
+        <h2 class="sec-t">Goal Streak Tracker</h2>
+        <span id="goal-date" class="dpill" style="color:var(--neon3);background:rgba(0,229,200,0.08);border:1px solid rgba(0,229,200,0.2)">--</span>
+      </div>
+      <p class="sec-s">Set goals. Log real amounts. Build streaks. Unlock milestones.</p>
+
+      <div class="gc" style="margin-bottom:1.5rem">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1rem;font-size:1rem">Add New Goal</div>
+        <div id="goal-form-grid" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:.7rem;align-items:flex-end;margin-bottom:.7rem">
+          <div class="fg2"><label>Goal Name</label><input class="fc2" id="gn" placeholder="e.g. Save ₹60,000 for Laptop..."></div>
+          <div class="fg2">
+            <label>Type</label>
+            <select class="fc2" id="gt2">
+              <option value="financial">💰 Financial</option>
+              <option value="personal">⭐ Personal</option>
+              <option value="purchase">🛍 Purchase</option>
+            </select>
+          </div>
+          <div class="fg2"><label>Target (₹ or units)</label><input class="fc2" id="gtgt" type="number" placeholder="60000" min="1"></div>
+          <div class="fg2"><label>Deadline</label><input class="fc2" id="gdl" type="date"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:.7rem;align-items:flex-end">
+          <div class="fg2"><label>Notes / Why this matters</label><input class="fc2" id="gnote" placeholder="Motivate yourself — write why this goal is important..."></div>
+          <button class="sbtn" style="margin-top:0;width:auto;padding:12px 24px" onclick="addGoal()">+ Add Goal</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.5rem">
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem" id="gs-total">0</div>
+          <div style="font-size:.73rem;color:var(--text2);margin-top:2px">Total Goals</div>
+        </div>
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--green)" id="gs-done">0</div>
+          <div style="font-size:.73rem;color:var(--text2);margin-top:2px">Completed</div>
+        </div>
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--amber)" id="gs-streak">0</div>
+          <div style="font-size:.73rem;color:var(--text2);margin-top:2px">Best Streak 🔥</div>
+        </div>
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--neon)" id="gs-avg">0%</div>
+          <div style="font-size:.73rem;color:var(--text2);margin-top:2px">Avg Progress</div>
+        </div>
+      </div>
+
+      <div class="gg" id="gg"><div class="es" style="grid-column:1/-1">🎯 No goals yet — add your first goal!</div></div>
+
+      <div class="cg" style="margin-top:1.5rem">
+        <div class="cc">
+          <div class="ct">Goal Progress Overview</div>
+          <div style="position:relative;height:210px">
+            <canvas id="gbc" role="img" aria-label="Goal progress bar chart"></canvas>
+          </div>
+        </div>
+        <div class="cc">
+          <div class="ct">🏆 Streak Leaderboard</div>
+          <div id="slb" style="display:flex;flex-direction:column;gap:.5rem;max-height:210px;overflow-y:auto">
+            <div class="es">No goals yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== ANALYTICS PAGE ===================== -->
+  <div id="page-analytics" class="page">
+    <div class="sec">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:.3rem">
+        <h2 class="sec-t">Real-Time Analytics</h2>
+        <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
+          <span id="ana-date" class="dpill" style="color:var(--pink);background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.2)">--</span>
+          <button onclick="exportPDF()" class="pdf-btn" id="pdf-btn">
+            <span id="pdf-btn-text">📄 Export PDF Report</span>
+          </button>
+        </div>
+      </div>
+      <p class="sec-s">Your complete financial, habit and goal picture — all in one view</p>
+
+      <div class="analytics-grid">
+        <!-- Top Left: Finance -->
+        <div class="ana-card">
+          <div class="ana-title">
+            <span class="ana-dot" style="background:var(--green)"></span>
+            <span style="color:var(--green)">Income</span>
+            <span class="ana-dot" style="background:var(--red);margin-left:.5rem"></span>
+            <span style="color:var(--red)">Expenses</span>
+            <span style="color:var(--text2);font-size:.8rem;margin-left:auto">Last 14 Days</span>
+          </div>
+          <div style="position:relative;height:220px">
+            <canvas id="ana-fin-chart" role="img" aria-label="Income vs expense analytics chart"></canvas>
+          </div>
+        </div>
+
+        <!-- Top Right: Habits -->
+        <div class="ana-card">
+          <div class="ana-title">
+            <span>🔁 Habit Consistency</span>
+            <span style="color:var(--text2);font-size:.8rem;margin-left:auto">Per Habit · 14 Days</span>
+          </div>
+          <div style="position:relative;height:220px">
+            <canvas id="ana-hab-chart" role="img" aria-label="Per-habit consistency analytics"></canvas>
+          </div>
+        </div>
+
+        <!-- Bottom: Goals — Full Width -->
+        <div class="ana-card full">
+          <div class="ana-title">
+            <span>🎯 Goal Progress & Streaks</span>
+            <span style="color:var(--text2);font-size:.8rem;margin-left:auto">All Goals</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div>
+              <div style="font-size:.78rem;color:var(--text2);margin-bottom:.5rem">Progress %</div>
+              <div style="position:relative;height:200px">
+                <canvas id="ana-goal-prog" role="img" aria-label="Goal progress chart"></canvas>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:.78rem;color:var(--text2);margin-bottom:.5rem">Streak Days</div>
+              <div style="position:relative;height:200px">
+                <canvas id="ana-goal-streak" role="img" aria-label="Goal streak chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Row -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.25rem">
+        <div class="ana-card" style="text-align:center">
+          <div style="font-size:.78rem;color:var(--text2);margin-bottom:.35rem">Net Balance</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem" id="ana-balance">₹0</div>
+        </div>
+        <div class="ana-card" style="text-align:center">
+          <div style="font-size:.78rem;color:var(--text2);margin-bottom:.35rem">Today's Habits Done</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--neon2)" id="ana-habits">0/0</div>
+        </div>
+        <div class="ana-card" style="text-align:center">
+          <div style="font-size:.78rem;color:var(--text2);margin-bottom:.35rem">Goals Completed</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--green)" id="ana-goals">0/0</div>
+        </div>
+      </div>
+
+      <!-- Reminders Card -->
+      <div class="ana-card" style="margin-top:1.25rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1.25rem">
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.2rem">🔔 Reminder Notifications</div>
+            <div style="font-size:.82rem;color:var(--text2)">Get notified to mark habits daily & update goals every 3 days</div>
+          </div>
+          <button onclick="requestNotifPermission()" id="notif-perm-btn" class="pdf-btn" style="background:linear-gradient(135deg,var(--neon3),var(--amber))">
+            <span id="notif-perm-text">🔔 Enable Notifications</span>
+          </button>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem" id="notif-settings">
+          <!-- Habit reminder -->
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1rem">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+              <span style="font-size:1.2rem">🔁</span>
+              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem">Daily Habit Reminder</span>
+            </div>
+            <div style="font-size:.8rem;color:var(--text2);margin-bottom:.75rem">Reminds you every day to mark your habits</div>
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem">
+              <label style="font-size:.78rem;color:var(--text2);white-space:nowrap">Remind at</label>
+              <input type="time" id="habit-notif-time" value="20:00" class="fc2" style="flex:1;padding:6px 10px;font-size:.85rem">
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span id="habit-notif-status" style="font-size:.75rem;color:var(--text3)">Not scheduled</span>
+              <button onclick="scheduleHabitReminder()" class="sbtn" style="width:auto;padding:7px 14px;font-size:.78rem;margin-top:0">Set Reminder</button>
+            </div>
+          </div>
+
+          <!-- Goal reminder -->
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1rem">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+              <span style="font-size:1.2rem">🎯</span>
+              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem">Goal Update Reminder</span>
+            </div>
+            <div style="font-size:.8rem;color:var(--text2);margin-bottom:.75rem">Reminds you every 3 days to update your goal progress</div>
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem">
+              <label style="font-size:.78rem;color:var(--text2);white-space:nowrap">Remind at</label>
+              <input type="time" id="goal-notif-time" value="18:00" class="fc2" style="flex:1;padding:6px 10px;font-size:.85rem">
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span id="goal-notif-status" style="font-size:.75rem;color:var(--text3)">Not scheduled</span>
+              <button onclick="scheduleGoalReminder()" class="sbtn" style="width:auto;padding:7px 14px;font-size:.78rem;margin-top:0">Set Reminder</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="notif-denied-msg" style="display:none;margin-top:.75rem;padding:.75rem 1rem;background:rgba(240,79,94,0.1);border:1px solid rgba(240,79,94,0.25);border-radius:8px;font-size:.82rem;color:var(--red)">
+          ⚠️ Notifications are blocked. Please go to your browser settings → Site settings → Notifications → Allow for this site.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== AUTH OVERLAY ===================== -->
+  <div id="auth-overlay">
+    <div class="auth-wrapper">
+      <div class="auth-hero-badge">✦ Student Financial Dashboard</div>
+      <h1 class="auth-hero-title">Your <span class="glow-up">glow-up</span><br>starts here 🚀</h1>
+
+      <div class="auth-box">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">🔑 Login</button>
+          <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">✨ Register</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="form-login">
+          <div class="auth-form-header">
+            <div class="auth-form-title">Welcome back 👋</div>
+            <div class="auth-form-sub">Slay! Let's get you back in</div>
+          </div>
+          <div class="vibe-row">
+            <span class="vibe-chip">🔒 secure</span>
+            <span class="vibe-chip g">⚡ instant access</span>
+            <span class="vibe-chip p">💅 aesthetic af</span>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">Email</label>
+            <input class="auth-inp" id="l-email" type="email" placeholder="you@email.com" autocomplete="email">
+            <div class="auth-err" id="l-email-err"></div>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">Password</label>
+            <div class="pass-wrap">
+              <input class="auth-inp" id="l-pass" type="password" placeholder="••••••••">
+              <button type="button" class="eye-btn" onclick="toggleEye('l-pass','l-eye')" id="l-eye">👁</button>
+            </div>
+            <div class="auth-err" id="l-pass-err"></div>
+            <button class="forgot-link" onclick="toggleForgot()">Forgot password?</button>
+          </div>
+
+          <!-- FORGOT PASSWORD PANEL -->
+          <div id="forgot-panel">
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:.5rem;color:var(--neon)">Reset Password</div>
+            <div style="font-size:.78rem;color:var(--text2);margin-bottom:.75rem">Enter your registered email and a new password.</div>
+            <div class="auth-field" style="margin-bottom:.6rem">
+              <label class="auth-label">Registered Email</label>
+              <input class="auth-inp" id="fp-email" type="email" placeholder="you@email.com">
+            </div>
+            <div class="auth-field" style="margin-bottom:.6rem">
+              <label class="auth-label">New Password</label>
+              <div class="pass-wrap">
+                <input class="auth-inp" id="fp-newpass" type="password" placeholder="New password (min 6 chars)">
+                <button type="button" class="eye-btn" onclick="toggleEye('fp-newpass','fp-eye')" id="fp-eye">👁</button>
+              </div>
+            </div>
+            <div class="auth-err" id="fp-err" style="margin-bottom:.4rem"></div>
+            <div style="display:flex;justify-content:flex-end;margin-top:.25rem">
+              <button class="auth-btn" style="width:auto;padding:10px 22px;font-size:.88rem" onclick="doResetPassword()">Reset Password →</button>
+            </div>
+          </div>
+
+          <div class="auth-err" id="l-gen-err" style="margin-bottom:.5rem;text-align:center"></div>
+          <button class="auth-btn" onclick="doLogin()">Sign In →</button>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div id="form-register" style="display:none">
+          <div class="auth-form-header">
+            <div class="auth-form-title">Join the <span style="color:var(--neon)">SFD fam</span> 🦋</div>
+            <div class="auth-form-sub">New here? Slay! Fill this out and let's get your bag secured 💰</div>
+          </div>
+          <div class="vibe-row">
+            <span class="vibe-chip">🆓 free forever</span>
+            <span class="vibe-chip g">🔥 no ads</span>
+            <span class="vibe-chip p">💜 student-built</span>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">First Name</label>
+            <div class="auth-name-row">
+              <input class="auth-inp" id="r-firstname" type="text" placeholder="e.g. Arjun">
+              <input class="auth-inp" id="r-lastname" type="text" placeholder="e.g. Sharma">
+            </div>
+            <div class="auth-err" id="r-name-err"></div>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">Email Address</label>
+            <input class="auth-inp" id="r-email" type="email" placeholder="you@email.com">
+            <div class="auth-err" id="r-email-err"></div>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">Password (min 6 characters)</label>
+            <div class="pass-wrap">
+              <input class="auth-inp" id="r-pass" type="password" placeholder="••••••••">
+              <button type="button" class="eye-btn" onclick="toggleEye('r-pass','r-eye')" id="r-eye">👁</button>
+            </div>
+            <div class="auth-err" id="r-pass-err"></div>
+          </div>
+          <div class="auth-err" id="r-gen-err" style="margin-bottom:.5rem;text-align:center"></div>
+          <button class="auth-btn" onclick="doRegister()">Create Account →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODULAR JAVASCRIPT ===================== -->
+  <script src="js/state.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/quotes.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/finance.js"></script>
+  <script src="js/habits.js"></script>
+  <script src="js/goals.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/pdf-export.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

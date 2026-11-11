@@ -1,0 +1,82 @@
+/* ===== CSS VARIABLES & THEMES ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== DARK THEME ===== */
+[data-theme="dark"] {
+  --bg: #050812;
+  --bg2: #090f1e;
+  --bg3: #0d1428;
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass2: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.08);
+  --border2: rgba(255, 255, 255, 0.15);
+  --neon: #4f9eff;
+  --neon2: #7c5cfc;
+  --neon3: #00e5c8;
+  --text: #f0f4ff;
+  --text2: #8892aa;
+  --text3: #4a5568;
+  --green: #22c55e;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --pink: #ec4899;
+  --navbar-bg: rgba(5, 8, 18, 0.92);
+  --card-bg: rgba(255, 255, 255, 0.04);
+  --input-bg: #0d1428;
+  --chart-grid: rgba(255, 255, 255, 0.04);
+  --chart-tick: #8892aa;
+}
+
+/* ===== LIGHT THEME ===== */
+[data-theme="light"] {
+  --bg: #f0f4ff;
+  --bg2: #e8eef8;
+  --bg3: #dde5f5;
+  --glass: rgba(255, 255, 255, 0.7);
+  --glass2: rgba(255, 255, 255, 0.9);
+  --border: rgba(0, 0, 0, 0.1);
+  --border2: rgba(0, 0, 0, 0.18);
+  --neon: #1a6fd4;
+  --neon2: #5b3ec7;
+  --neon3: #00a896;
+  --text: #111827;
+  --text2: #4b5563;
+  --text3: #9ca3af;
+  --green: #16a34a;
+  --red: #dc2626;
+  --amber: #d97706;
+  --pink: #db2777;
+  --navbar-bg: rgba(240, 244, 255, 0.95);
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --input-bg: #ffffff;
+  --chart-grid: rgba(0, 0, 0, 0.06);
+  --chart-tick: #4b5563;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  overflow-x: hidden;
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Custom Gradient Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--neon), var(--neon2));
+  border-radius: 4px;
+}
