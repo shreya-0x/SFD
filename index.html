@@ -323,7 +323,7 @@
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.5rem">
+      <div class="goal-summary-stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.5rem">
         <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center">
           <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem" id="gs-total">0</div>
           <div style="font-size:.73rem;color:var(--text2);margin-top:2px">Total Goals</div>
@@ -425,7 +425,7 @@
       </div>
 
       <!-- Summary Row -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.25rem">
+      <div class="ana-summary-stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.25rem">
         <div class="ana-card" style="text-align:center">
           <div style="font-size:.78rem;color:var(--text2);margin-bottom:.35rem">Net Balance</div>
           <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem" id="ana-balance">₹0</div>
@@ -497,6 +497,7 @@
 
   <!-- ===================== AUTH OVERLAY ===================== -->
   <div id="auth-overlay">
+    <button type="button" class="auth-close-btn" onclick="closeAuthModal()" title="Close and explore">✕</button>
     <div class="auth-wrapper">
       <div class="auth-hero-badge">✦ Student Financial Dashboard</div>
       <h1 class="auth-hero-title">Your <span class="glow-up">glow-up</span><br>starts here 🚀</h1>
@@ -556,6 +557,7 @@
 
           <div class="auth-err" id="l-gen-err" style="margin-bottom:.5rem;text-align:center"></div>
           <button class="auth-btn" onclick="doLogin()">Sign In →</button>
+          <button type="button" class="auth-guest-btn" onclick="continueAsGuest()">⚡ Continue as Guest (Explore Demo)</button>
         </div>
 
         <!-- REGISTER FORM -->
@@ -592,6 +594,7 @@
           </div>
           <div class="auth-err" id="r-gen-err" style="margin-bottom:.5rem;text-align:center"></div>
           <button class="auth-btn" onclick="doRegister()">Create Account →</button>
+          <button type="button" class="auth-guest-btn" onclick="continueAsGuest()">⚡ Continue as Guest (Explore Demo)</button>
         </div>
       </div>
     </div>

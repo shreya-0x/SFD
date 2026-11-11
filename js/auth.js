@@ -234,6 +234,26 @@ function logoutUser() {
   window.location.reload();
 }
 
+function continueAsGuest() {
+  const guestUser = { email: 'guest@sfd.app', name: 'Student Guest' };
+  localStorage.setItem(SESSION_KEY, JSON.stringify(guestUser));
+  window._activeUserDataKey = 'sfd_data_guest';
+  const ud = localStorage.getItem(window._activeUserDataKey);
+  if (ud) {
+    try {
+      D = { ...D, ...JSON.parse(ud) };
+    } catch (e) {
+      console.warn('Guest data parse error:', e);
+    }
+  }
+  onAuthSuccess(guestUser);
+}
+
+function closeAuthModal() {
+  const overlay = document.getElementById('auth-overlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
 // Auto-login on load if session exists
 (function checkSession() {
   const user = getCurrentUser();

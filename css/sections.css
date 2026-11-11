@@ -8,22 +8,26 @@
   padding: 0;
   position: relative;
   overflow: hidden;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 #pc {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: 0;
   opacity: 0.85;
+  pointer-events: none;
 }
 
 .lc {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 2rem;
+  padding: 85px 1.25rem 3rem;
   max-width: 700px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -31,9 +35,9 @@
 
 .lh1 {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(1.8rem, 5vw, 3.6rem);
+  font-size: clamp(1.8rem, 5vw, 3.4rem);
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.15;
   margin-bottom: 1.2rem;
   text-shadow: 0 0 80px rgba(79, 158, 255, 0.08);
 }
@@ -46,16 +50,17 @@
 
 .lsub {
   color: var(--text2);
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
   line-height: 1.7;
   margin-bottom: 1.75rem;
   font-weight: 300;
+  max-width: 580px;
 }
 
 /* ===================== HOME ===================== */
 .fg {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
   margin-bottom: 2.5rem;
 }
@@ -105,7 +110,7 @@
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 2rem;
+  padding: 1.75rem 1.5rem;
   text-align: center;
   margin-bottom: 2.5rem;
   min-height: 110px;
@@ -119,8 +124,9 @@
   font-family: 'Syne', sans-serif;
   font-size: 1.05rem;
   font-weight: 600;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.5rem;
   transition: opacity 0.3s;
+  line-height: 1.5;
 }
 
 .qa {
@@ -155,7 +161,7 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0;
+  gap: 0.5rem;
   padding: 1.5rem;
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -188,7 +194,7 @@
 .fa {
   font-size: 1.2rem;
   color: var(--neon);
-  padding: 0 0.4rem;
+  padding: 0 0.2rem;
   animation: pa 1.5s ease infinite;
 }
 
@@ -363,7 +369,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
-  max-height: 310px;
+  max-height: 320px;
   overflow-y: auto;
 }
 
@@ -400,12 +406,17 @@
 .hdays {
   display: flex;
   gap: 4px;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
 .db2 {
   width: 32px;
   height: 32px;
+  min-width: 32px;
+  flex-shrink: 0;
   border-radius: 6px;
   border: 1px solid var(--border);
   background: var(--bg2);
@@ -427,7 +438,7 @@
 /* ===================== GOALS ===================== */
 .gg {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
@@ -495,7 +506,8 @@
 .gstat .gsv {
   font-family: 'Syne', sans-serif;
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1rem;
+  word-break: break-all;
 }
 
 .gstat .gsl {
