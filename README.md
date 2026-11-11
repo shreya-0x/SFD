@@ -1,5 +1,9 @@
 # SFD - Student Financial Dashboard 💸🎯
 
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen.svg)](https://shreya-0x.github.io/SFD/)
+
+🔗 **Live Website**: [https://shreya-0x.github.io/SFD/](https://shreya-0x.github.io/SFD/)
+
 A modern, responsive, and aesthetic financial, habit, and goal tracking application built for students.
 
 ---
